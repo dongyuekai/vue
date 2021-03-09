@@ -31,11 +31,15 @@ Vue.prototype.$mount = function (
 
   const options = this.$options
   // resolve template/el and convert to render function
+  // 把template/el 转换成render函数
   if (!options.render) {
     let template = options.template
+    // 如果模板存在
     if (template) {
       if (typeof template === 'string') {
+        // 如果模板是id选择器
         if (template.charAt(0) === '#') {
+          // 获取响应的DOM对象的innerHTML
           template = idToTemplate(template)
           /* istanbul ignore if */
           if (process.env.NODE_ENV !== 'production' && !template) {
