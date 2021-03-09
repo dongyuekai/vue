@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title></title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Runtime+Compiler</title>
+</head>
+
+<body>
+  <div id="app">
+    hello world
+  </div>
+  <script src='../../dist/vue.runtime.js'></script>
+  <script>
+    // compiler
+    // 需要编译器 把template转换成render函数
+    // runtime版本的vue不能编译template
+    const vm = new Vue({
+      el: "#app",
+      // template: '<h1>{{msg}}</h1>',
+      render(h) {
+        return h('h1', this.msg)
+      },
+      data: {
+        msg: 'Hello Vue'
+      }
+    })
+  </script>
+</body>
+
+</html>
