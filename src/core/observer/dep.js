@@ -39,6 +39,7 @@ export default class Dep {
     }
   }
 
+  // 发布通知
   notify() {
     // stabilize the subscriber list first
     const subs = this.subs.slice()
@@ -48,6 +49,7 @@ export default class Dep {
       // order
       subs.sort((a, b) => a.id - b.id)
     }
+    // 调用每个订阅者（监听者）的update方法实现更新
     for (let i = 0, l = subs.length; i < l; i++) {
       subs[i].update()
     }
@@ -62,6 +64,9 @@ export default class Dep {
 Dep.target = null
 const targetStack = []
 
+// 入栈并将当前watcher赋值给Dep.target
+// 父子组件嵌套的时候先把父组件对应的watcher入栈
+// 再去处理子组件的 watcher 子组件的处理完毕后 再把父组件对应的 watcher 出栈 继续操作
 export function pushTarget(target: ?Watcher) {
   // 入栈将当前watcher赋值给Dep.target
   targetStack.push(target)
