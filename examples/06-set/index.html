@@ -1,0 +1,34 @@
+<!-- 为一个响应式对象动态增加一个响应式属性 -->
+<!-- vue.$set -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title></title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+  <div id="app">
+    {{obj.title}}
+    <hr>
+    {{obj.name}}
+    <hr>
+    {{arr}}
+  </div>
+  <script src='../../dist/vue.js'></script>
+  <script>
+    const vm = new Vue({
+      el: '#app',
+      data: {
+        obj: {
+          title: 'Hello Vue'
+        },
+        arr: [1, 2, 3]
+      }
+    })
+  </script>
+</body>
+
+</html>
