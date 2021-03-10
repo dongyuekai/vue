@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title></title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>observe</title>
+</head>
+
+<body>
+  <div id='app'>
+    {{arr}}
+  </div>
+  <script src='../../dist/vue.js'></script>
+  <script>
+    const vm = new Vue({
+      el: '#app',
+      data: {
+        arr: [1, 2, 3]
+      }
+    })
+    vm.push(100) // 此时会更新视图 因为源码中对push方法做了修补
+    vm[0] = 99  // 此时不会更新视图
+    vm.splice(2) // 此时会更新视图 因为源码中对splice方法做了修补
+  </script>
+</body>
+
+</html>
