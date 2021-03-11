@@ -353,9 +353,13 @@ export function stateMixin (Vue: Class<Component>) {
       return createWatcher(vm, expOrFn, cb, options)
     }
     options = options || {}
+    // 标记为用户watcher
     options.user = true
+    // 创建用户watcher对象
     const watcher = new Watcher(vm, expOrFn, cb, options)
+    // 判断immediate如果为true
     if (options.immediate) {
+      // 立即执行一次cb回调 并把当前值传入
       try {
         cb.call(vm, watcher.value)
       } catch (error) {

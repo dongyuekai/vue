@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title></title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+  <div id="app">
+    {{user.fullName}}
+  </div>
+  <script src='../../dist/vue.js'></script>
+  <script>
+    const vm = new Vue({
+      el: '#app',
+      data: {
+        user: {
+          firstName: '诸葛',
+          lastName: '亮',
+          fullName: ''
+        }
+      },
+      watch: {
+        'user': {
+          handler: function (newValue, oldValue) {
+            this.user.fullName = newValue.firstName + '' + newValue.lastName
+          },
+          immediate: true, // 立即执行 
+          deep: true  // 深度监听
+        }
+      }
+    })
+
+  </script>
+</body>
+
+</html>
