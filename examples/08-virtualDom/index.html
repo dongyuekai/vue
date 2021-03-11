@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title></title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>virtualDom</title>
+</head>
+
+<body>
+  <div id="app"></div>
+  <script src='../../dist/vue.runtime.js'></script>
+  <script>
+    const vm = new Vue({
+      el: '#app',
+      render(h) {
+        // h(tag,data,children) h函数的基本格式
+        // h('h1', this.msg)  // 省略data
+        // h('h1', { domProps: { innerHTML: this.msg } })  // 省略children
+        // h('h1', { attrs: { id: 'title' } }, this.msg)  // 完整版
+        const vnode = h(
+          'h1',
+          {
+            attrs: { id: 'title' }
+          },
+          this.msg
+        )
+        console.log('vnode----', vnode)
+        return vnode
+      },
+      data: {
+        msg: "123"
+      }
+    })
+  </script>
+</body>
+
+</html>
