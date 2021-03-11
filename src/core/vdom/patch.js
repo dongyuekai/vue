@@ -486,6 +486,7 @@ export function createPatchFunction(backend) {
           } else {
             // 如果key相同 但是不是相同的节点（key相同 tag不同） 就创建新元素
             // same key but different element. treat as new element
+            
             createElm(newStartVnode, insertedVnodeQueue, parentElm, oldStartVnode.elm, false, newCh, newStartIdx)
           }
         }
@@ -589,6 +590,7 @@ export function createPatchFunction(backend) {
     if (isUndef(vnode.text)) {
       // 老节点和新节点都有子节点
       // 对子节点进行diff操作 调用updateChildren
+      
       if (isDef(oldCh) && isDef(ch)) {
         if (oldCh !== ch) updateChildren(elm, oldCh, ch, insertedVnodeQueue, removeOnly)
       } else if (isDef(ch)) {
