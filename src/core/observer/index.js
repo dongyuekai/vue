@@ -70,7 +70,9 @@ export class Observer {
    * value type is Object.
    */
   walk(obj: Object) {
+    // 获取对象的每一个属性
     const keys = Object.keys(obj)
+    // 遍历每一个属性 设置为响应式数据
     for (let i = 0; i < keys.length; i++) {
       defineReactive(obj, keys[i])
     }
@@ -116,10 +118,12 @@ function copyAugment(target: Object, src: Object, keys: Array<string>) {
  * or the existing observer if the value already has one.
  */
 export function observe(value: any, asRootData: ?boolean): Observer | void {
+  // 判断value是否是对象
   if (!isObject(value) || value instanceof VNode) {
     return
   }
   let ob: Observer | void
+  // 如果value有__ob__（observer对象） 属性
   if (hasOwn(value, '__ob__') && value.__ob__ instanceof Observer) {
     ob = value.__ob__
   } else if (
@@ -129,6 +133,7 @@ export function observe(value: any, asRootData: ?boolean): Observer | void {
     Object.isExtensible(value) &&
     !value._isVue
   ) {
+    // 创建一个Observer对象
     ob = new Observer(value)
   }
   if (asRootData && ob) {
