@@ -966,7 +966,9 @@
    * value type is Object.
    */
   Observer.prototype.walk = function walk (obj) {
+    // 获取对象的每一个属性
     var keys = Object.keys(obj);
+    // 遍历每一个属性 设置为响应式数据
     for (var i = 0; i < keys.length; i++) {
       defineReactive(obj, keys[i]);
     }
@@ -1011,10 +1013,12 @@
    * or the existing observer if the value already has one.
    */
   function observe(value, asRootData) {
+    // 判断value是否是对象
     if (!isObject(value) || value instanceof VNode) {
       return
     }
     var ob;
+    // 如果value有__ob__（observer对象） 属性
     if (hasOwn(value, '__ob__') && value.__ob__ instanceof Observer) {
       ob = value.__ob__;
     } else if (
@@ -1024,6 +1028,7 @@
       Object.isExtensible(value) &&
       !value._isVue
     ) {
+      // 创建一个Observer对象
       ob = new Observer(value);
     }
     if (asRootData && ob) {
@@ -9726,7 +9731,7 @@
   var platformGetTagNamespace;
   var maybeComponent;
 
-  function createASTElement (
+  function createASTElement(
     tag,
     attrs,
     parent
@@ -9745,10 +9750,11 @@
   /**
    * Convert HTML string to AST.
    */
-  function parse (
+  function parse(
     template,
     options
   ) {
+    // 1 解析 options
     warn$2 = options.warn || baseWarn;
 
     platformIsPreTag = options.isPreTag || no;
@@ -9772,14 +9778,14 @@
     var inPre = false;
     var warned = false;
 
-    function warnOnce (msg, range) {
+    function warnOnce(msg, range) {
       if (!warned) {
         warned = true;
         warn$2(msg, range);
       }
     }
 
-    function closeElement (element) {
+    function closeElement(element) {
       trimEndingWhitespace(element);
       if (!inVPre && !element.processed) {
         element = processElement(element, options);
@@ -9813,7 +9819,7 @@
             // keep it in the children list so that v-else(-if) conditions can
             // find it as the prev node.
             var name = element.slotTarget || '"default"'
-            ;(currentParent.scopedSlots || (currentParent.scopedSlots = {}))[name] = element;
+              ; (currentParent.scopedSlots || (currentParent.scopedSlots = {}))[name] = element;
           }
           currentParent.children.push(element);
           element.parent = currentParent;
@@ -9839,7 +9845,7 @@
       }
     }
 
-    function trimEndingWhitespace (el) {
+    function trimEndingWhitespace(el) {
       // remove trailing whitespace node
       if (!inPre) {
         var lastNode;
@@ -9853,7 +9859,7 @@
       }
     }
 
-    function checkRootConstraints (el) {
+    function checkRootConstraints(el) {
       if (el.tag === 'slot' || el.tag === 'template') {
         warnOnce(
           "Cannot use <" + (el.tag) + "> as component root element because it may " +
@@ -9870,6 +9876,7 @@
       }
     }
 
+    // 2 对模板解析
     parseHTML(template, {
       warn: warn$2,
       expectHTML: options.expectHTML,
@@ -9879,7 +9886,8 @@
       shouldDecodeNewlinesForHref: options.shouldDecodeNewlinesForHref,
       shouldKeepComment: options.comments,
       outputSourceRange: options.outputSourceRange,
-      start: function start (tag, attrs, unary, start$1, end) {
+      //  解析过程中的回调函数 生成AST
+      start: function start(tag, attrs, unary, start$1, end) {
         // check namespace.
         // inherit parent ns if there is one
         var ns = (currentParent && currentParent.ns) || platformGetTagNamespace(tag);
@@ -9946,8 +9954,12 @@
           processRawAttrs(element);
         } else if (!element.processed) {
           // structural directives
+          // 结构化指令
+          // v-for
           processFor(element);
+          // v-if
           processIf(element);
+          // v-once
           processOnce(element);
         }
 
@@ -9966,7 +9978,7 @@
         }
       },
 
-      end: function end (tag, start, end$1) {
+      end: function end(tag, start, end$1) {
         var element = stack[stack.length - 1];
         // pop stack
         stack.length -= 1;
@@ -9977,7 +9989,7 @@
         closeElement(element);
       },
 
-      chars: function chars (text, start, end) {
+      chars: function chars(text, start, end) {
         if (!currentParent) {
           {
             if (text === template) {
@@ -10048,7 +10060,7 @@
           }
         }
       },
-      comment: function comment (text, start, end) {
+      comment: function comment(text, start, end) {
         // adding anything as a sibling to the root node is forbidden
         // comments should still be allowed, but ignored
         if (currentParent) {
@@ -10068,13 +10080,13 @@
     return root
   }
 
-  function processPre (el) {
+  function processPre(el) {
     if (getAndRemoveAttr(el, 'v-pre') != null) {
       el.pre = true;
     }
   }
 
-  function processRawAttrs (el) {
+  function processRawAttrs(el) {
     var list = el.attrsList;
     var len = list.length;
     if (len) {
@@ -10095,7 +10107,7 @@
     }
   }
 
-  function processElement (
+  function processElement(
     element,
     options
   ) {
@@ -10120,7 +10132,7 @@
     return element
   }
 
-  function processKey (el) {
+  function processKey(el) {
     var exp = getBindingAttr(el, 'key');
     if (exp) {
       {
@@ -10147,7 +10159,7 @@
     }
   }
 
-  function processRef (el) {
+  function processRef(el) {
     var ref = getBindingAttr(el, 'ref');
     if (ref) {
       el.ref = ref;
@@ -10155,7 +10167,7 @@
     }
   }
 
-  function processFor (el) {
+  function processFor(el) {
     var exp;
     if ((exp = getAndRemoveAttr(el, 'v-for'))) {
       var res = parseFor(exp);
@@ -10172,7 +10184,7 @@
 
 
 
-  function parseFor (exp) {
+  function parseFor(exp) {
     var inMatch = exp.match(forAliasRE);
     if (!inMatch) { return }
     var res = {};
@@ -10191,7 +10203,7 @@
     return res
   }
 
-  function processIf (el) {
+  function processIf(el) {
     var exp = getAndRemoveAttr(el, 'v-if');
     if (exp) {
       el.if = exp;
@@ -10210,7 +10222,7 @@
     }
   }
 
-  function processIfConditions (el, parent) {
+  function processIfConditions(el, parent) {
     var prev = findPrevElement(parent.children);
     if (prev && prev.if) {
       addIfCondition(prev, {
@@ -10226,7 +10238,7 @@
     }
   }
 
-  function findPrevElement (children) {
+  function findPrevElement(children) {
     var i = children.length;
     while (i--) {
       if (children[i].type === 1) {
@@ -10244,14 +10256,14 @@
     }
   }
 
-  function addIfCondition (el, condition) {
+  function addIfCondition(el, condition) {
     if (!el.ifConditions) {
       el.ifConditions = [];
     }
     el.ifConditions.push(condition);
   }
 
-  function processOnce (el) {
+  function processOnce(el) {
     var once = getAndRemoveAttr(el, 'v-once');
     if (once != null) {
       el.once = true;
@@ -10260,7 +10272,7 @@
 
   // handle content being passed to a component as slot,
   // e.g. <template slot="xxx">, <div slot-scope="xxx">
-  function processSlotContent (el) {
+  function processSlotContent(el) {
     var slotScope;
     if (el.tag === 'template') {
       slotScope = getAndRemoveAttr(el, 'scope');
@@ -10379,7 +10391,7 @@
     }
   }
 
-  function getSlotName (binding) {
+  function getSlotName(binding) {
     var name = binding.name.replace(slotRE, '');
     if (!name) {
       if (binding.name[0] !== '#') {
@@ -10399,7 +10411,7 @@
   }
 
   // handle <slot/> outlets
-  function processSlotOutlet (el) {
+  function processSlotOutlet(el) {
     if (el.tag === 'slot') {
       el.slotName = getBindingAttr(el, 'name');
       if ( el.key) {
@@ -10413,7 +10425,7 @@
     }
   }
 
-  function processComponent (el) {
+  function processComponent(el) {
     var binding;
     if ((binding = getBindingAttr(el, 'is'))) {
       el.component = binding;
@@ -10423,7 +10435,7 @@
     }
   }
 
-  function processAttrs (el) {
+  function processAttrs(el) {
     var list = el.attrsList;
     var i, l, name, rawName, value, modifiers, syncGen, isDynamic;
     for (i = 0, l = list.length; i < l; i++) {
@@ -10549,15 +10561,15 @@
         // #6887 firefox doesn't update muted state if set via attribute
         // even immediately after element creation
         if (!el.component &&
-            name === 'muted' &&
-            platformMustUseProp(el.tag, el.attrsMap.type, name)) {
+          name === 'muted' &&
+          platformMustUseProp(el.tag, el.attrsMap.type, name)) {
           addProp(el, name, 'true', list[i]);
         }
       }
     }
   }
 
-  function checkInFor (el) {
+  function checkInFor(el) {
     var parent = el;
     while (parent) {
       if (parent.for !== undefined) {
@@ -10568,7 +10580,7 @@
     return false
   }
 
-  function parseModifiers (name) {
+  function parseModifiers(name) {
     var match = name.match(modifierRE);
     if (match) {
       var ret = {};
@@ -10577,7 +10589,7 @@
     }
   }
 
-  function makeAttrsMap (attrs) {
+  function makeAttrsMap(attrs) {
     var map = {};
     for (var i = 0, l = attrs.length; i < l; i++) {
       if (
@@ -10592,11 +10604,11 @@
   }
 
   // for script (e.g. type="x/template") or style, do not decode content
-  function isTextTag (el) {
+  function isTextTag(el) {
     return el.tag === 'script' || el.tag === 'style'
   }
 
-  function isForbiddenTag (el) {
+  function isForbiddenTag(el) {
     return (
       el.tag === 'style' ||
       (el.tag === 'script' && (
@@ -10610,7 +10622,7 @@
   var ieNSPrefix = /^NS\d+:/;
 
   /* istanbul ignore next */
-  function guardIESVGBug (attrs) {
+  function guardIESVGBug(attrs) {
     var res = [];
     for (var i = 0; i < attrs.length; i++) {
       var attr = attrs[i];
@@ -10622,7 +10634,7 @@
     return res
   }
 
-  function checkForAliasModel (el, value) {
+  function checkForAliasModel(el, value) {
     var _el = el;
     while (_el) {
       if (_el.for && _el.alias === value) {
@@ -10777,8 +10789,10 @@
     isStaticKey = genStaticKeysCached(options.staticKeys || '');
     isPlatformReservedTag = options.isReservedTag || no;
     // first pass: mark all non-static nodes.
+    // 标记静态节点
     markStatic$1(root);
     // second pass: mark static roots.
+    // 标记静态根节点
     markStaticRoots(root, false);
   }
 
@@ -10789,12 +10803,15 @@
     )
   }
 
-  function markStatic$1 (node) {
+  function markStatic$1(node) {
+    // 判断当前 astNode是否是静态的
     node.static = isStatic(node);
+    // 如果是元素节点
     if (node.type === 1) {
       // do not make component slot content static. this avoids
       // 1. components not able to mutate slot nodes
       // 2. static slot content fails for hot-reloading
+      // 是组件 不是slot 没有inline-template
       if (
         !isPlatformReservedTag(node.tag) &&
         node.tag !== 'slot' &&
@@ -10802,10 +10819,13 @@
       ) {
         return
       }
+      // 遍历children
       for (var i = 0, l = node.children.length; i < l; i++) {
         var child = node.children[i];
+        // 标记静态
         markStatic$1(child);
         if (!child.static) {
+          // 如果有一个child不是static 当前 node 不是static
           node.static = false;
         }
       }
@@ -10829,6 +10849,8 @@
       // For a node to qualify as a static root, it should have children that
       // are not just static text. Otherwise the cost of hoisting out will
       // outweigh the benefits and it's better off to just always render it fresh.
+      // 如果一个元素内只有文本节点 此时这个元素不是静态的Root
+      // Vue认为这种优化会带来负面影响
       if (node.static && node.children.length && !(
         node.children.length === 1 &&
         node.children[0].type === 3
@@ -10838,6 +10860,7 @@
       } else {
         node.staticRoot = false;
       }
+      // 检测当前节点的子节点是否有静态的Root
       if (node.children) {
         for (var i = 0, l = node.children.length; i < l; i++) {
           markStaticRoots(node.children[i], isInFor || !!node.for);
@@ -11127,6 +11150,8 @@
       } else {
         var data;
         if (!el.plain || (el.pre && state.maybeComponent(el))) {
+          // 生成元素的属性 指令 事件等
+          // 处理各种指令 包括 genDirectives（model/text/html）
           data = genData$2(el, state);
         }
 
@@ -11550,6 +11575,7 @@
   function genText (text) {
     return ("_v(" + (text.type === 2
       ? text.expression // no need for () because already wrapped in _s()
+      // JSON.stringify(text.text) 字符串加上引号 hello->hello
       : transformSpecialNewlines(JSON.stringify(text.text))) + ")")
   }
 
@@ -11804,7 +11830,7 @@
 
 
 
-  function createFunction (code, errors) {
+  function createFunction(code, errors) {
     try {
       return new Function(code)
     } catch (err) {
@@ -11813,10 +11839,10 @@
     }
   }
 
-  function createCompileToFunctionFn (compile) {
+  function createCompileToFunctionFn(compile) {
     var cache = Object.create(null);
 
-    return function compileToFunctions (
+    return function compileToFunctions(
       template,
       options,
       vm
@@ -11844,6 +11870,7 @@
       }
 
       // check cache
+      // 1、读取缓存中的 CompiledFunctionResult 对象 如果有直接返回
       var key = options.delimiters
         ? String(options.delimiters) + template
         : template;
@@ -11852,6 +11879,7 @@
       }
 
       // compile
+      // 2、把模板编译为编译对象（render,staticRenderFns）,字符串形式的js代码
       var compiled = compile(template, options);
 
       // check compilation errors/tips
@@ -11885,6 +11913,8 @@
       // turn code into functions
       var res = {};
       var fnGenErrors = [];
+
+      // 3、把字符串形式的js代码转换成js函数
       res.render = createFunction(compiled.render, fnGenErrors);
       res.staticRenderFns = compiled.staticRenderFns.map(function (code) {
         return createFunction(code, fnGenErrors)
@@ -11908,14 +11938,15 @@
           );
         }
       }
-
+      // 4、缓存并返回res对象 （render,staticRenderFns方法）
       return (cache[key] = res)
     }
   }
 
   /*  */
 
-  function createCompilerCreator (baseCompile) {
+  function createCompilerCreator(baseCompile) {
+    // baseOptions 平台相关的options
     return function createCompiler (baseOptions) {
       function compile (
         template,
@@ -11994,14 +12025,21 @@
     template,
     options
   ) {
+    // 把模板转换成ast抽象语法树
+    // 抽象语法树 用来以树形的方式描述代码结构
     var ast = parse(template.trim(), options);
     if (options.optimize !== false) {
+      // 优化抽象语法树
       optimize(ast, options);
     }
+    // 把抽象语法树生成字符串形式的js代码
     var code = generate(ast, options);
     return {
+      // 抽象语法树
       ast: ast,
+      // 渲染函数
       render: code.render,
+      // 静态渲染函数 生成静态VNode树
       staticRenderFns: code.staticRenderFns
     }
   });
